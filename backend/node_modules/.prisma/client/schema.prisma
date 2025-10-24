@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  cognitoId String     @unique
+  email     String     @unique
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  files     File[]
+  progress  Progress[]
+  roadmaps  Roadmap[]
+
+  @@map("users")
+}
+
+model Roadmap {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  skills      String[]
+  goal        String
+  timeFrame   Int
+  skillLevel  String
+  preference  String
+  status      String     @default("draft")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  userId      String
+  phases      Phase[]
+  progress    Progress[]
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("roadmaps")
+}
+
+model Phase {
+  id         String      @id @default(cuid())
+  title      String
+  order      Int
+  duration   String
+  status     String      @default("upcoming")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  roadmapId  String
+  milestones Milestone[]
+  roadmap    Roadmap     @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  @@map("phases")
+}
+
+model Milestone {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  completed   Boolean    @default(false)
+  order       Int
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  phaseId     String
+  phase       Phase      @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  resources   Resource[]
+
+  @@map("milestones")
+}
+
+model Resource {
+  id          String    @id @default(cuid())
+  name        String
+  url         String
+  type        String    @default("link")
+  createdAt   DateTime  @default(now())
+  milestoneId String
+  milestone   Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@map("resources")
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  completed Boolean  @default(false)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  roadmapId String
+  roadmap   Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("progress")
+}
+
+model File {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  createdAt    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("files")
+}
