@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 280 25% 98%;
+    --foreground: 270 15% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 270 15% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 15% 25%;
+
+    --primary: 270 60% 65%;
+    --primary-foreground: 0 0% 100%;
+    
+    --primary-light: 270 55% 75%;
+    --primary-glow: 270 65% 80%;
+
+    --secondary: 200 60% 70%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --accent: 330 65% 75%;
+    --accent-foreground: 270 15% 25%;
+
+    --muted: 270 20% 95%;
+    --muted-foreground: 270 10% 50%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 15% 90%;
+    --input: 270 15% 90%;
+    --ring: 270 60% 65%;
+
+    --radius: 1rem;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 65%), hsl(330 65% 75%));
+    --gradient-secondary: linear-gradient(180deg, hsl(280 25% 98%), hsl(270 30% 96%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(270 25% 99%));
+    
+    --shadow-sm: 0 2px 8px hsl(270 30% 85% / 0.15);
+    --shadow-md: 0 4px 16px hsl(270 30% 75% / 0.2);
+    --shadow-lg: 0 8px 24px hsl(270 40% 65% / 0.25);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+}
