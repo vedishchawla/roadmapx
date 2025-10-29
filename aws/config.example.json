@@ -1,0 +1,7 @@
+{
+  "region": "us-east-1",
+  "bucket": "your-artifacts-and-data-bucket",
+  "execution_role_arn": "arn:aws:iam::123456789012:role/sagemaker-execution-role",
+  "personalize_role_arn": "arn:aws:iam::123456789012:role/PersonalizeS3Role",
+  "kms_key_arn": ""
+}

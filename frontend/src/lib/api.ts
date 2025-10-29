@@ -93,6 +93,21 @@ class ApiClient {
     });
   }
 
+  // AI Roadmap methods
+  async generateAiRoadmap(description: string) {
+    return this.request('/api/roadmaps/ai/generate', {
+      method: 'POST',
+      body: JSON.stringify({ description }),
+    });
+  }
+
+  async analyzeText(description: string) {
+    return this.request('/api/roadmaps/ai/analyze', {
+      method: 'POST',
+      body: JSON.stringify({ description }),
+    });
+  }
+
   async updateRoadmapStatus(id: string, status: string) {
     return this.request(`/api/roadmaps/${id}/status`, {
       method: 'PATCH',

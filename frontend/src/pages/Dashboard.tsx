@@ -28,65 +28,30 @@ const Dashboard = () => {
   };
 
   const handleGenerateRoadmap = async () => {
-    if (!skills.trim() || !goal.trim() || !skillLevel || !learningPreference) {
-      toast.error("Please fill in all fields");
+    if (!goal.trim()) {
+      toast.error("Please enter your learning goal/description");
       return;
     }
 
     setIsGenerating(true);
-    
     try {
-      // Create roadmap with basic structure
-      const roadmapData = {
-        title: `Learn ${skills}`,
-        description: `A comprehensive roadmap to achieve: ${goal}`,
-        skills: skills.split(',').map(s => s.trim()), // Convert to array for PostgreSQL
-        goal,
-        timeFrame: timeFrame[0], // Convert array to number
-        skillLevel,
-        preference: learningPreference === 'video' ? 'visual' : 
-                   learningPreference === 'documentation' ? 'theoretical' : 
-                   learningPreference, // Map frontend values to backend expected values
-        phases: [
-          {
-            title: "Foundation",
-            order: 1,
-            duration: "2-3 weeks",
-            milestones: [
-              {
-                title: "Basic Concepts",
-                description: "Learn the fundamental concepts",
-                order: 1,
-                resources: [
-                  { name: "Official Documentation", url: "https://example.com", type: "link" }
-                ]
-              }
-            ]
-          },
-          {
-            title: "Intermediate Skills",
-            order: 2,
-            duration: "3-4 weeks",
-            milestones: [
-              {
-                title: "Practice Projects",
-                description: "Build small projects to practice",
-                order: 1,
-                resources: [
-                  { name: "Project Ideas", url: "https://example.com", type: "link" }
-                ]
-              }
-            ]
-          }
-        ]
-      };
+      // Build a natural language description that AI endpoint expects
+      const descriptionParts: string[] = [];
+      if (goal.trim()) descriptionParts.push(goal.trim());
+      if (skills.trim()) descriptionParts.push(`My current skills: ${skills}.`);
+      if (skillLevel) descriptionParts.push(`My skill level is ${skillLevel}.`);
+      if (timeFrame?.[0]) descriptionParts.push(`I have ${timeFrame[0]} ${timeFrame[0] === 1 ? 'month' : 'months'} to learn.`);
+      if (learningPreference) descriptionParts.push(`I prefer ${learningPreference} learning.`);
 
-      const roadmap = await apiClient.createRoadmap(roadmapData);
+      const description = descriptionParts.join(' ');
+
+      const result: any = await apiClient.generateAiRoadmap(description);
+      const roadmap = result.roadmap || result; // backend returns { roadmap, aiAnalysis }
       toast.success("Roadmap generated successfully!");
       navigate(`/roadmap/${roadmap.id}`);
     } catch (error) {
-      console.error('Error creating roadmap:', error);
-      toast.error("Failed to create roadmap. Please try again.");
+      console.error('Error generating AI roadmap:', error);
+      toast.error("Failed to generate roadmap. Please try again.");
     } finally {
       setIsGenerating(false);
     }
